@@ -1,0 +1,38 @@
+-> In directory : go/response.go
+
+* Implemented connection pooling
+* Added the functionality of caching
+
+
+->In directory go\request.go
+
+* handle errors more robustly.
+* Use context.Context instead of C pointers
+*replaced constant with magic numbers
+
+->In directory go\port.go
+
+*Used a sync Pool to reuse instances of nxt_unit_request_info_t and reduce memory allocations.
+*Use the httpcache package instead of rolling out a custom caching mechanism. This will not only simplify your code, but also provide more features and better performance
+*Use a mutex to protect the cache map in the Cache struct, as multiple goroutines may access it concurrently:
+
+->In directory go\oberevable.go
+
+* added default case in select stament 
+in notification section 
+
+*changed receiver to pointer to mitigate extra copying of observer slice
+
+
+->in directory command_line_arguments
+
+*returns the command-line argument at the given index
+*handles HTTP requests and returns the command-line arguments passed to the program
+
+
+
+->in directory go\node\404
+
+*Upgraded the basic 404 website
+*Added better css and html code
+

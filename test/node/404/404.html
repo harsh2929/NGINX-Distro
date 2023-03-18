@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>404 Not Found</title>
+    <style>
+      /* Set the background color */
+      body {
+        background-color: #f1f1f1;
+        font-family: Arial, sans-serif;
+      }
+      
+      /* Center the content */
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      
+      /* Add a container for the error message */
+      .error {
+        text-align: center;
+        padding: 2em;
+        background-color: #fff;
+        border-radius: 0.5em;
+        box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
+      }
+      
+      /* Add a heading for the error message */
+      h1 {
+        font-size: 3em;
+        margin: 0;
+      }
+      
+      /* Add a message for the error message */
+      p {
+        font-size: 1.5em;
+        margin: 1em 0;
+      }
+      
+      /* Add an animation for the error message */
+      .error {
+        animation: shake 0.5s ease-in-out infinite;
+      }
+      
+      /* Define the animation keyframes */
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        10% {
+          transform: translateX(-1em);
+        }
+        20% {
+          transform: translateX(1em);
+        }
+        30% {
+          transform: translateX(-1em);
+        }
+        40% {
+          transform: translateX(1em);
+        }
+        50% {
+          transform: translateX(-0.5em);
+        }
+        60% {
+          transform: translateX(0.5em);
+        }
+        70% {
+          transform: translateX(-0.5em);
+        }
+        80% {
+          transform: translateX(0.5em);
+        }
+        90% {
+          transform: translateX(-0.2em);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="error">
+        <h1>404 Not Found</h1>
+        <p>The requested URL was not found on this server.</p>
+      </div>
+    </div>
+  </body>
+</html>
