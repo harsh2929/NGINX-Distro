@@ -1,18 +1,9 @@
-
-/*
- * Copyright (C) Igor Sysoev
- * Copyright (C) NGINX, Inc.
- */
-
 #include <nxt_main.h>
 
-
-nxt_array_t *
-nxt_array_create(nxt_mp_t *mp, nxt_uint_t n, size_t size)
+/* Creates a new array. */
+nxt_array_t *nxt_array_create(nxt_mp_t *mp, nxt_uint_t n, size_t size)
 {
-    nxt_array_t  *array;
-
-    array = nxt_mp_alloc(mp, sizeof(nxt_array_t) + n * size);
+    nxt_array_t *array = nxt_mp_alloc(mp, sizeof(nxt_array_t) + n * size);
 
     if (nxt_slow_path(array == NULL)) {
         return NULL;
@@ -27,9 +18,8 @@ nxt_array_create(nxt_mp_t *mp, nxt_uint_t n, size_t size)
     return array;
 }
 
-
-void
-nxt_array_destroy(nxt_array_t *array)
+/* Destroys the array. */
+void nxt_array_destroy(nxt_array_t *array)
 {
     if (array->elts != nxt_pointer_to(array, sizeof(nxt_array_t))) {
         nxt_mp_free(array->mem_pool, array->elts);
@@ -38,21 +28,18 @@ nxt_array_destroy(nxt_array_t *array)
     nxt_mp_free(array->mem_pool, array);
 }
 
-
-void *
-nxt_array_add(nxt_array_t *array)
+/* Adds an element to the array. */
+void *nxt_array_add(nxt_array_t *array)
 {
-    void      *p;
-    uint32_t  nalloc, new_alloc;
+    void *p;
+    uint32_t nalloc, new_alloc;
 
     nalloc = array->nalloc;
 
     if (array->nelts == nalloc) {
-
         if (nalloc < 16) {
             /* Allocate new array twice larger than current. */
             new_alloc = (nalloc == 0) ? 4 : nalloc * 2;
-
         } else {
             /* Allocate new array 1.5 times larger than current. */
             new_alloc = nalloc + nalloc / 2;
@@ -80,13 +67,10 @@ nxt_array_add(nxt_array_t *array)
     return p;
 }
 
-
-void *
-nxt_array_zero_add(nxt_array_t *array)
+/* Adds an element to the array and zeroes the memory. */
+void *nxt_array_zero_add(nxt_array_t *array)
 {
-    void  *p;
-
-    p = nxt_array_add(array);
+    void *p = nxt_array_add(array);
 
     if (nxt_fast_path(p != NULL)) {
         nxt_memzero(p, array->size);
@@ -95,13 +79,10 @@ nxt_array_zero_add(nxt_array_t *array)
     return p;
 }
 
-
-void
-nxt_array_remove(nxt_array_t *array, void *elt)
+/* Removes an element from the array. */
+void nxt_array_remove(nxt_array_t *array, void *elt)
 {
-    void  *last;
-
-    last = nxt_array_last(array);
+    void *last = nxt_array_last(array);
 
     if (elt != last) {
         nxt_memcpy(elt, last, array->size);
@@ -110,12 +91,11 @@ nxt_array_remove(nxt_array_t *array, void *elt)
     array->nelts--;
 }
 
-
-nxt_array_t *
-nxt_array_copy(nxt_mp_t *mp, nxt_array_t *dst, nxt_array_t *src)
+/* Copies the source array to the destination array. */
+nxt_array_t *nxt_array_copy(nxt_mp_t *mp, nxt_array_t *dst, nxt_array_t *src)
 {
-    void      *data;
-    uint32_t  i, size;
+    void *data;
+    uint32_t i, size;
 
     size = src->size;
 
@@ -130,13 +110,14 @@ nxt_array_copy(nxt_mp_t *mp, nxt_array_t *dst, nxt_array_t *src)
 
     if (dst->nalloc >= src->nelts) {
         nxt_memcpy(dst->elts, src->elts, src->nelts * size);
-
     } else {
         nxt_memcpy(dst->elts, src->elts, dst->nelts * size);
 
         for (i = dst->nelts; i < src->nelts; i++) {
             data = nxt_array_add(dst);
             if (nxt_slow_path(data == NULL)) {
+                /* Clean up previously copied data if allocation fails. */
+                nxt_array_destroy(dst);
                 return NULL;
             }
 
