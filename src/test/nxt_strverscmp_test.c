@@ -1,19 +1,11 @@
-
-/*
- * Copyright (C) NGINX, Inc.
- * Copyright (C) Valentin V. Bartenev
- */
-
 #include <nxt_main.h>
 #include "nxt_tests.h"
-
 
 typedef struct {
     const char  *v1;
     const char  res;
     const char  *v2;
 } nxt_strverscmp_test_t;
-
 
 nxt_int_t
 nxt_strverscmp_test(nxt_thread_t *thr)
@@ -51,44 +43,37 @@ nxt_strverscmp_test(nxt_thread_t *thr)
     };
 
     nxt_thread_time_update(thr);
+    nxt_log_error(NXT_LOG_NOTICE, thr->log, "nxt_strverscmp() test started");
 
     for (i = 0; i < nxt_nitems(tests); i++) {
-
         ret = nxt_strverscmp((u_char *) tests[i].v1, (u_char *) tests[i].v2);
 
         switch (tests[i].res) {
+            case '<':
+                if (ret < 0) {
+                    continue;
+                }
+                break;
 
-        case '<':
-            if (ret < 0) {
-                continue;
-            }
+            case '=':
+                if (ret == 0) {
+                    continue;
+                }
+                break;
 
-            break;
-
-        case '=':
-            if (ret == 0) {
-                continue;
-            }
-
-            break;
-
-        case '>':
-            if (ret > 0) {
-                continue;
-            }
-
-            break;
+            case '>':
+                if (ret > 0) {
+                    continue;
+                }
+                break;
         }
 
         nxt_log_alert(thr->log,
                       "nxt_strverscmp() test \"%s\" %c \"%s\" failed: %i",
                       tests[i].v1, tests[i].res, tests[i].v2, ret);
-
         return NXT_ERROR;
     }
 
-    nxt_log_error(NXT_LOG_NOTICE, thr->log,
-                  "nxt_strverscmp() test passed");
-
+    nxt_log_error(NXT_LOG_NOTICE, thr->log, "nxt_strverscmp() test passed");
     return NXT_OK;
 }
